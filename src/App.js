@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useContext} from 'react';
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
+import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import {AuthContext} from "./context/AuthContext";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const {data} = useContext(AuthContext);
+    const {user, isLoading} = data;
+
+
+    const RutaProtegida = ({component, path, ...rest}) => {
+        if (user) {
+            return <Route component={component} path={path} {...rest} />
+        } else {
+            return <Redirect to="/login" {...rest} />
+        }
+
+    }
+
+    return !isLoading ? (
+        <Router>
+            <div className="container-fluid p-0">
+                <Navbar user={user}/>
+                <Switch>
+                    <Route component={Login} path="/login" exact/>
+                    <RutaProtegida component={Home} path="/" exact/>
+                    <Route component={NotFound}/>
+                </Switch>
+            </div>
+        </Router>
+    ) : (<div>Cargando...</div>)
 }
 
-export default App;
+export default App
