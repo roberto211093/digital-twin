@@ -3,12 +3,19 @@ import {AuthContext} from "../context/AuthContext";
 import {deviceListApi, devicePerformanceApi} from "../api/api";
 import Performance from "../components/Performance";
 import List from "../components/List";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+import {WSS_PATH} from "../api/config";
+import WebSocket from "../components/WebSocket";
+
+const client = new W3CWebSocket(WSS_PATH);
 
 const Home = () => {
     const {data} = useContext(AuthContext);
     const {user} = data;
     const [devices, setDevices] = useState([]);
     const [performance, setPerformance] = useState([]);
+    const [selectDevices, setSelectDevices] = useState([]);
+    const [dataSocket, setDataSocket] = useState([]);
 
     const fetchData = useCallback(async () => {
         try {
@@ -33,6 +40,17 @@ const Home = () => {
             setPerformance(data);
         }, 5000);
     }, []);
+
+    useEffect(() => {
+        client.onopen = () => {
+            console.log('WebSocket Client Connected');
+        };
+        client.onmessage = (message) => {
+            setDataSocket({
+                ...message,data:message.data, timeStamp:message.timeStamp
+            });
+        };
+    }, [setDataSocket]);
 
 
     return (
@@ -60,11 +78,11 @@ const Home = () => {
             </div>
 
             <div className="col col-12 col-md-2">
-                <List devices={devices}/>
+                <List devices={devices} setSelectDevices={setSelectDevices}/>
             </div>
 
             <div className="col col-12 col-md-10">
-                <h6>Estado de equipos:</h6>
+                <WebSocket selectDevices={selectDevices} dataSocket={dataSocket}/>
             </div>
         </div>
     )

@@ -1,9 +1,9 @@
 import React from "react";
 
 const List = (props) => {
-    const {devices} = props;
+    const {devices, setSelectDevices} = props;
     const changeSelected = (e) => {
-        console.log("changeSelected: ", e.target.value);
+        setSelectDevices(e.target.value);
     }
 
     return (
