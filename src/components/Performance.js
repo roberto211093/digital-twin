@@ -18,8 +18,8 @@ const Performance = (props) => {
                 barSize={10}
             >
                 <XAxis dataKey="name" scale="point" padding={{left: 2, right: 2}} hide={true}/>
-                <Tooltip/>
-                <Bar dataKey="valor" fill="#8884d8" background={{fill: '#eeeeee'}}/>
+                <Tooltip contentStyle={{color: '#343A40'}}/>
+                <Bar dataKey="valor" fill="#007bff" background={{fill: '#eeeeee'}}/>
             </BarChart>
         </>
     );

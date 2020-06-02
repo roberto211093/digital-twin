@@ -12,7 +12,7 @@ const Navbar = (props) => {
         setData({...data, user: null})
     }
     return (
-        <div className="navbar navbar-dark bg-dark">
+        <div className="navbar navbar-dark">
             <Link to="/" className="navbar-brand">Digital Twin</Link>
             <div className="d-flex">
                 {
